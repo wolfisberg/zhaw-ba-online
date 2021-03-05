@@ -25,6 +25,8 @@ AUDIO_FILES = librosa.util.find_files(directory=TARGET_DIR, recurse=True, case_s
 TARGET_SR = 16000
 PROCESSED_SUFFIX = '16khz16bit'
 
+print(f'[ {len(AUDIO_FILES)} ] audio files found.')
+
 for file in AUDIO_FILES:
     regex = re.compile(f'.*{PROCESSED_SUFFIX}.*', re.IGNORECASE)
     if regex.search(file):
@@ -48,7 +50,15 @@ for file in AUDIO_FILES:
         soundfile.write(file=new_file_name, data=y_16k, samplerate=TARGET_SR, format='WAV', subtype='PCM_16')
 
         # write file using scipy (result is louder than original)
-        # write_wave(filename=new_file_name, rate=TARGET_SR, data=y_16k_16bit)
-    except Exception:
+        # write_wave(filename=new_file_name, rate=TARGET_SR, data=y_16k)
+
+        print(f'[ {new_file_name} ] successfully down-sampled.')
+
+    except Exception as ex:
         print(f'Error processing file [ {file} ]')
-        print(Exception)
+        if hasattr(ex, 'message'):
+            print(ex.message)
+        else:
+            print(str(ex))
+
+        print('')
