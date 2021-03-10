@@ -36,14 +36,12 @@ for file in AUDIO_FILES:
     try:
         y, sr = librosa.load(path=file, sr=None)
 
-        # convert stereo signal to mono
-        if y.shape[0] == 2:
-            y = np.nanmean(a=y, axis=0)
+        y = librosa.to_mono(y)
 
         y_16k = librosa.resample(y=y, orig_sr=sr, target_sr=TARGET_SR, res_type='kaiser_best', scale=True)
 
         # manually decrease bit depth - currently done by soundfile.write subtype PCM_16
-        # y_16k = (y_16k / np.max(np.abs(y_16k)) * np.iinfo(np.int16).max).astype(np.int16)
+        y_16k = (y_16k / np.max(np.abs(y_16k)) * np.iinfo(np.int16).max).astype(np.int16)
 
         file_path = Path(file)
         new_file_name = os.path.join(str(file_path.parent), f'{file_path.stem}_{PROCESSED_SUFFIX}{file_path.suffix}')
