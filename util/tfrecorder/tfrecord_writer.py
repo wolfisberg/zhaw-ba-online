@@ -25,6 +25,7 @@ def main():
 def create_tfrecords_from_directory(dir, add_ref_data=False):
     for data_dir in [_TRAINING_DATA_DIR, _TEST_DATA_DIR, _VALIDATION_DATA_DIR]:
         data_dir_path = os.path.join('data', 'downsampled', dir, data_dir)
+
         wav_files = librosa.util.find_files(directory=data_dir_path, ext=['wav'], recurse=False, case_sensitive=False)
         number_of_shards = math.ceil(len(wav_files) / _FILES_PER_SHARD)
 
@@ -63,14 +64,15 @@ def create_tfrecords_from_directory(dir, add_ref_data=False):
                             continue
 
                         ref_data = np.genfromtxt(ref_matches[0], delimiter=' ')
+                        pitch_refdata = np.pad(ref_data.T[0], (6,0), 'constant') # Padding pitch ref data with zeroes
 
                         example = tf.train.Example(features=tf.train.Features(feature={
                             'data': _bytes_feature(y.tobytes()),
                             'data_sampling_rate': _int64_feature([sr]),
                             'data_num_channels': _int64_feature([1]),
                             'data_width': _int64_feature([len(y)]),
-                            'pitch': _float_feature(ref_data.T[2]),
-                            'pitch_confidence': _float_feature(ref_data.T[3]),
+                            'pitch': _float_feature(pitch_refdata),
+                            'pitch_confidence': _float_feature(ref_data.T[1]),
                         }))
 
                     else:
@@ -81,20 +83,15 @@ def create_tfrecords_from_directory(dir, add_ref_data=False):
                             'data_width': _int64_feature([len(y)]),
                         }))
 
-
                     out.write(example.SerializeToString())
-
 
 def _int64_feature(value):
     return tf.train.Feature(int64_list=tf.train.Int64List(value=value))
 
-
 def _bytes_feature(value):
     return tf.train.Feature(bytes_list=tf.train.BytesList(value=[value]))
 
-
 def _float_feature(value):
     return tf.train.Feature(float_list=tf.train.FloatList(value=value))
-
 
 main()
