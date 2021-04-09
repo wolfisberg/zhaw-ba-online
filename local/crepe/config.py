@@ -17,7 +17,8 @@ PITCH_FRAME_LENGTH = 0.032 # s
 
 # Data
 BATCH_SIZE = 64
-NUM_FRAMES = 1 + FS * SAMPLE_LENGTH - FRAME_LENGTH // FRAME_STEP
+NUM_FRAMES = 1 + (FS * SAMPLE_LENGTH - FRAME_LENGTH) // FRAME_STEP
+
 
 
 # Training
@@ -27,7 +28,7 @@ VALIDATION_STEPS = 70
 
 
 # Directories
-_DATA_DIR = os.path.join('..', 'data', 'tfrecords')
+_DATA_DIR = os.path.join('..', 'data')
 _TFRECORDS_DIR = os.path.join(_DATA_DIR, 'tfrecords')
 
 SPEECH_DATA_TR_DIR = os.path.join(_TFRECORDS_DIR, 'speech', 'tr')

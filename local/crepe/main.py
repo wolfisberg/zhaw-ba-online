@@ -10,16 +10,13 @@ dataset_validation = data.get_validation_data()
 dataset_test = data.get_test_data()
 
 model = model_crepe.get_model()
-model.summary()
+#model.summary()
 
 tensorboard_callback = tf.keras.callbacks.TensorBoard(config.LOG_DIR, histogram_freq=1)
-
-if not os.path.exists(config.CHECKPOINT_DIR):
-    os.makedirs(config.CHECKPOINT_DIR)
 checkpoint = tf.keras.callbacks.ModelCheckpoint(filepath=os.path.join(config.CHECKPOINT_DIR,'{epoch:02d}-{val_loss:.2f}.hdf5'))
 
 callbacks = [checkpoint, tensorboard_callback]
-loss = model.evaluate(dataset_test, steps=1)
+# loss = model.evaluate(dataset_test, steps=1)
 
 history = model.fit(
     dataset_training,

@@ -54,7 +54,7 @@ def _interpolate_pitch(pitch,t):
     return f(t).astype(np.float32)
 
 
-@tf.function
+#@tf.function
 def _interpolate_pitch_tf(pitch,t):
     y = tf.py_function(_interpolate_pitch,[pitch,t], Tout=tf.float32)
     return tf.squeeze(y)
