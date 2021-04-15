@@ -1,21 +1,38 @@
-import numpy as np
 import dataset
 import matplotlib.pyplot as plt
 
 import config
-import util
+import estimations
+import performance_metrics
 
 
-dataset_test = dataset.get_test_data()
+"""
+TODO
+- Play with hop size
+- Compare swipe
+- Plot spectrogram
+- Noisy vs Clean
+"""
 
-one = dataset_test[0]
-one = one + (util.pitch_estimation_ref_rapt(one[0], config.FS),)
 
-mae = sum(abs(one[1] - one[2])) / len(one[1])
-mse = sum(np.square(one[2] - one[1])) / len(one[1])
+def main():
+    dataset_test = dataset.get_test_data()
 
-plt.plot(one[1], 'g')
-plt.plot(one[2], 'r')
-plt.show()
+    for track in dataset_test:
+        one = track
+        one = one + (estimations.pitch_estimation_ref_rapt(one[0], config.FS),)
 
-print('done.')
+        mae = performance_metrics.mean_absolute_error(one)
+        mse = performance_metrics.mean_square_error(one)
+        std_dev = performance_metrics.standard_deviation_hz(one[1], one[2])
+
+        plt.plot(one[1], 'g')
+        plt.plot(one[2], 'r')
+        plt.show()
+        print('done.')
+
+    print('done.')
+
+
+if __name__ == '__main__':
+    main()

@@ -1,10 +1,9 @@
 import tensorflow as tf
 import numpy as np
-from scipy import interpolate
 import os
 
 import config
-import util
+import audio_util
 
 
 def _parse_noise_record(serialized_example):
@@ -33,12 +32,6 @@ def _parse_speech_record(serialized_example):
     return decoded_features
 
 
-def _interpolate_pitch(pitch, t):
-    t_pitch = np.arange(0, len(pitch)) * config.PITCH_SAMPLING_TIME + config.PITCH_FRAME_LENGTH / 2
-    f = interpolate.interp1d(t_pitch, pitch, 'nearest')
-    return f(t).astype(np.float32)
-
-
 def _calc_features(zipped):
     speech_data = zipped[0]
     noise_data = zipped[1]
@@ -48,10 +41,10 @@ def _calc_features(zipped):
     noise = tf.cast(noise_data["data"], tf.float32) / tf.int16.max
 
     # Get X second slice from data
-    speech, noise, random_start_idx, duration = util.get_random_slices(speech, noise)
+    speech, noise, random_start_idx, duration = audio_util.get_random_slices(speech, noise)
 
     # Mix noise and speech with random SNR
-    speech, noise, noisy = util.mix_noisy_speech(speech, noise)
+    speech, noise, noisy = audio_util.mix_noisy_speech(speech, noise)
 
     # Add gain
     random_gain = tf.math.exp(
@@ -62,16 +55,17 @@ def _calc_features(zipped):
     interpolation_steps = np.array(
         range(random_start_idx, random_start_idx + duration * config.FS, config.FRAME_STEP)) / config.FS
 
-    pitch = speech_data["pitch"]
+    # Remove the padding added to the tfrecords
+    pitch = speech_data["pitch"][6:]
 
     # Reduce low confidence pitches estimates to 0
     # pitch_confidence = speech_data["pitch_confidence"]
     # pitch = tf.where(pitch_confidence > config.pitch_confidence_threshold, pitch, 0)
 
-    pitch_interpolated = _interpolate_pitch(pitch, interpolation_steps)
-    pitch_interpolated_cents = util.convert_hz_to_cent(pitch_interpolated)
+    pitch_interpolated = audio_util.interpolate_pitch(pitch, interpolation_steps)
+    # pitch_interpolated = util.convert_hz_to_cent(pitch_interpolated)
 
-    return noisy.numpy(), pitch_interpolated_cents
+    return noisy.numpy(), pitch_interpolated
 
 
 def get_test_data():
