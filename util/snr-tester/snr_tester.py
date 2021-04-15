@@ -8,7 +8,7 @@ import tensorflow as tf
 
 # Config
 SR_TARGET = 16000
-SNR_TARGET = 0
+SNR_TARGET = 25
 MIXED_DIR = os.path.join('data', 'mixed')
 if not os.path.exists(MIXED_DIR):
     os.makedirs(MIXED_DIR)
@@ -43,9 +43,10 @@ noise_resampled_normalized = \
 speech_pow = tf.math.reduce_euclidean_norm(speech_resampled_normalized)
 noise_pow = tf.math.reduce_euclidean_norm(noise_resampled_normalized)
 snr_current = 20.0 * tf.math.log(speech_pow / noise_pow) / tf.math.log(10.0)
-noise_snr_adjusted = noise_resampled_normalized * tf.math.pow(10.0, (snr_current - SR_TARGET) / 20.0)
+noise_snr_adjusted = noise_resampled_normalized * tf.math.pow(10.0, (snr_current - SNR_TARGET) / 20.0)
 length = min(len(speech_resampled_normalized), len(noise_snr_adjusted))
-noisy_speech = speech_resampled_normalized[-length:] + noise_snr_adjusted[-length:]
+#noisy_speech = speech_resampled_normalized[-length:] + noise_snr_adjusted[-length:]
+noisy_speech = speech_resampled_normalized[-length:] + noise_resampled_normalized[-length:]
 
 # Write out mixed audio to file
 soundfile.write(
