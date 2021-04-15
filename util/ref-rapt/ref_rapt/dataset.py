@@ -32,7 +32,7 @@ def _parse_speech_record(serialized_example):
     return decoded_features
 
 
-def _calc_features(zipped):
+def _calc_features(zipped, mix_with_noise):
     speech_data = zipped[0]
     noise_data = zipped[1]
 
@@ -40,20 +40,26 @@ def _calc_features(zipped):
     speech = tf.cast(speech_data["data"], tf.float32) / tf.int16.max
     noise = tf.cast(noise_data["data"], tf.float32) / tf.int16.max
 
+    if len(speech) == 0:
+        print('this should not happen')
+
+    if len(speech) == 0:
+        print('this should not happen')
+
     # Get X second slice from data
-    speech, noise, random_start_idx, duration = audio_util.get_random_slices(speech, noise)
+    speech, noise, random_start_idx, duration = audio_util.get_random_slice(speech, noise)
 
     # Mix noise and speech with random SNR
-    speech, noise, noisy = audio_util.mix_noisy_speech(speech, noise)
+    if mix_with_noise:
+        speech = audio_util.mix_noisy_speech(speech, noise)
 
     # Add gain
     random_gain = tf.math.exp(
         tf.random.uniform([], minval=tf.math.log(config.MIN_RAND_GAIN), maxval=tf.math.log(config.MAX_RAND_GAIN)))
-    noisy = random_gain * noisy
+    speech = random_gain * speech
 
-    # todo: magic numbers
-    interpolation_steps = np.array(
-        range(random_start_idx, random_start_idx + duration * config.FS, config.FRAME_STEP)) / config.FS
+    interpolation_steps = [audio_util.get_interpolationsteps_for_stepsize(random_start_idx, duration, s)
+                           for s in config.FRAME_STEPS]
 
     # Remove the padding added to the tfrecords
     pitch = speech_data["pitch"][6:]
@@ -62,17 +68,17 @@ def _calc_features(zipped):
     # pitch_confidence = speech_data["pitch_confidence"]
     # pitch = tf.where(pitch_confidence > config.pitch_confidence_threshold, pitch, 0)
 
-    pitch_interpolated = audio_util.interpolate_pitch(pitch, interpolation_steps)
-    # pitch_interpolated = util.convert_hz_to_cent(pitch_interpolated)
+    pitches_interpolated = [audio_util.interpolate_pitch(pitch, s) for s in interpolation_steps]
 
-    return noisy.numpy(), pitch_interpolated
+    return speech.numpy(), *pitches_interpolated
 
 
-def get_test_data():
+def get_test_data(mix_with_noise=True):
     speech_ds = tf.data.TFRecordDataset(
         [os.path.join(config.SPEECH_DATA_TT_DIR, file) for file in os.listdir(config.SPEECH_DATA_TT_DIR)])
     speech_ds = speech_ds.map(_parse_speech_record)
     noise_ds = tf.data.TFRecordDataset(
         [os.path.join(config.NOISE_DATA_TT_DIR, file) for file in os.listdir(config.NOISE_DATA_TT_DIR)])
     noise_ds = noise_ds.map(_parse_noise_record)
-    return list(map(_calc_features, zip(speech_ds, noise_ds)))
+    zipped = zip(speech_ds, noise_ds)
+    return [_calc_features(z, mix_with_noise) for z in zipped]

@@ -29,10 +29,10 @@ def mix_noisy_speech(speech, noise):
     noise = noise * tf.math.pow(10.0, (snr_current - snr_target) / 20.0)
     noisy_speech = speech + noise
 
-    return speech, noise, noisy_speech
+    return noisy_speech
 
 
-def get_random_slices(speech, noise):
+def get_random_slice(speech, noise):
     duration = 2  # seconds
     padding_end = 1  # seconds
     padding_start = 2  # seconds
@@ -45,4 +45,11 @@ def get_random_slices(speech, noise):
     random_start_idx_noise = int(tf.round(tf.random.uniform([], minval=min_val, maxval=max_val)))
     noise = noise[random_start_idx_noise:random_start_idx_noise + duration * config.FS]
 
+    if random_start_idx_speech < 0:
+        print('This should not happen.')
+
     return speech, noise, random_start_idx_speech, duration
+
+
+def get_interpolationsteps_for_stepsize(start_idx, duration, step_size):
+    return np.array(range(start_idx, start_idx + duration * config.FS, step_size)) / config.FS

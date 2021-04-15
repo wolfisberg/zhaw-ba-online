@@ -5,6 +5,7 @@ import tensorflow as tf
 # Audio
 SNR_RANGE = (-5.0,20.0) #dB
 FRAME_STEP = 256
+FRAME_STEPS = [64, 128, 256, 512, 1024]
 MIN_RAND_GAIN = 0.05
 MAX_RAND_GAIN = 1.1
 FS = 16000
