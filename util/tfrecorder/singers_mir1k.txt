@@ -1,21 +1,21 @@
-abjones: 43
-amy: 132
-Ani: 38
-annar: 42
-ariel: 40
-bobon: 50
-bug: 38
-davidson: 52
-fdps: 48
-geniusturtle: 69
-heycat: 40
-jmzen: 52
-Kenshin: 52
-khair: 44
-leon: 97
-stool: 45
-tammy: 8
-titon: 45
-yifen: 65
+M TT abjones: 43
+F TR amy: 132
+F TR Ani: 38
+F CV annar: 42
+F CV ariel: 40
+M TR bobon: 50
+M TT bug: 38
+M TR davidson: 52
+M CV fdps: 48
+M TR geniusturtle: 69
+F TR heycat: 40
+M TR jmzen: 52
+M TR Kenshin: 52
+M CV khair: 44
+M TR leon: 97
+M CV stool: 45
+F TR tammy: 8
+F TT titon: 45
+F TR yifen: 65
 
 Total: 1000
