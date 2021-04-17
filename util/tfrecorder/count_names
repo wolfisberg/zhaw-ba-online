@@ -1,0 +1,19 @@
+#!/bin/sh
+
+TOTAL=0
+TARGET_DIR='PitchLabel/'
+
+NAMES=$(ls $TARGET_DIR | sed -E 's/([a-zA-Z]*)_.*/\1/' | sort -u)
+
+for NAME in $NAMES
+do
+    COUNT=$(ls $TARGET_DIR | grep $NAME | wc -l)
+    TOTAL=$(($TOTAL + $COUNT))
+    echo $NAME': '$COUNT
+done
+
+echo ''
+echo 'Total: '$TOTAL
+
+exit 0
+

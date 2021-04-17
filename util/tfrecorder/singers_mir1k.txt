@@ -1,0 +1,21 @@
+abjones: 43
+amy: 132
+Ani: 38
+annar: 42
+ariel: 40
+bobon: 50
+bug: 38
+davidson: 52
+fdps: 48
+geniusturtle: 69
+heycat: 40
+jmzen: 52
+Kenshin: 52
+khair: 44
+leon: 97
+stool: 45
+tammy: 8
+titon: 45
+yifen: 65
+
+Total: 1000
