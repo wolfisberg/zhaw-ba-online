@@ -45,5 +45,6 @@ plt.xlabel('Time [s]')
 plt.ylabel('Frequency [Hz]')
 fig.colorbar(colormap).set_label('Intensity [dB]')
 
-plt.savefig(output_path, format='svg')
+format = 'svg'
+plt.savefig(os.path.join(output_path, f'spectrogram.{format}'), format=format)
 plt.show()
