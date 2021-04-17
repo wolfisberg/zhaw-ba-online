@@ -1,0 +1,11 @@
+# Input files
+*.wav
+*.pv
+
+# Output files
+*.svg
+*.png
+*.jpg
+*.jpeg
+*.tif
+*.tiff
