@@ -17,6 +17,8 @@ scipy = "^1.6.1"
 tensorflow = "^2.4.1"
 
 [tool.poetry.dev-dependencies]
+pylint = "1.6.4"
+black = "^20.8b1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
