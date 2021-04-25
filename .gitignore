@@ -2,12 +2,12 @@
 *.wav
 *.f0
 *.pv
+
 # Temporary directory for experimentation
 tmp/
 
 # IDE
 .idea/
-.vscode/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
