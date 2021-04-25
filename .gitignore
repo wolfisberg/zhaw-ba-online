@@ -1,3 +1,7 @@
+# wav and pitch files
+*.wav
+*.f0
+*.pv
 # Temporary directory for experimentation
 tmp/
 
