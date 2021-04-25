@@ -1,11 +1,13 @@
 import tensorflow as tf
 import numpy as np
 import librosa
-from librosa import display
 import os
 import math
 import pathlib
 import matplotlib.pyplot as plt
+
+from ..util import conversions
+
 
 _FILES_PER_SHARD = 750
 _BASE_PATH = os.path.join('/' 'home', 'kaspar', 'Glacier', 'data-zhaw-ba', 'unzipped', 'MIR-1K')
@@ -16,6 +18,7 @@ _SHARD_BASE_NAME = 'shard_mir1k_'
 _SAMPLE_RATE = 16000
 
 length_differences = []
+
 
 def main():
     create_tfrecords_from_directory(_BASE_PATH)
@@ -53,7 +56,7 @@ def create_tfrecords_from_directory(dir):
                         continue
 
                     ref_data = np.genfromtxt(ref_matches[0])
-                    ref_data = _convert_semitone_to_hz(ref_data, 10)  # Convert semitones to Hz
+                    ref_data = conversions.convert_semitone_to_hz(ref_data, 10)  # Convert semitones to Hz
                     ref_data[ref_data <= 10] = 0  # Floor ref data 10 -> 0 Hz for model fitting
                     ref_data = np.insert(ref_data, 0, 0)
                     length_differences.append(len(y) / 16000 * 1000 - len(ref_data) * 20)
@@ -84,11 +87,6 @@ def _float_feature(value):
     return tf.train.Feature(float_list=tf.train.FloatList(value=value))
 
 
-def _convert_semitone_to_hz(c, fref=10.0):
-    return fref * 2 ** (c / 12.0)
-
-
-
 def _plot_stereo_audio(y, sr):
     fig, ax = plt.subplots(nrows=2, sharex='all', sharey='all')
     librosa.display.waveplot(y[0], sr=sr, ax=ax[0])
@@ -98,6 +96,7 @@ def _plot_stereo_audio(y, sr):
     ax[1].set(title='Channel 1')
     ax[1].label_outer()
     fig.show()
+
 
 def _plot_mono_audio(y, sr):
     fig, ax = plt.subplots()

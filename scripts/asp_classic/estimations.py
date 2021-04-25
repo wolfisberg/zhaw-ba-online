@@ -1,7 +1,7 @@
 import pysptk
 import numpy as np
 
-import config
+from asp_classic import config
 
 
 def pitch_estimation_ref_rapt(x, fs, hop_size=config.FRAME_STEP):

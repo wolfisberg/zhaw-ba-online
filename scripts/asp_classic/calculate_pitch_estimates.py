@@ -1,12 +1,9 @@
-import dataset
 import matplotlib.pyplot as plt
 import numpy as np
 import pickle
 import datetime
 
-import config
-import estimations
-import performance_metrics
+from asp_classic import dataset, config, estimations, performance_metrics
 
 
 def get_datetime_file_extension():
@@ -26,6 +23,14 @@ def get_pitch_estimates(dataset):
     for item in dataset:
         estimate = {}
         estimate['audio'] = item[0]
+
+        mae = performance_metrics.mean_absolute_error(item)
+        mse = performance_metrics.mean_square_error(item)
+        std_dev = performance_metrics.standard_deviation_hz(item[1], item[2])
+
+        plt.plot(item[1], 'g')
+        plt.plot(item[2], 'r')
+        plt.show()
 
         for i in range(len(config.FRAME_STEPS)):
             step_size = config.FRAME_STEPS[i]
@@ -51,14 +56,6 @@ def main():
 
     print('done.')
 
-    # mae = performance_metrics.mean_absolute_error(item)
-    # mse = performance_metrics.mean_square_error(item)
-    # std_dev = performance_metrics.standard_deviation_hz(item[1], item[2])
-
 
 if __name__ == '__main__':
     main()
-
-# plt.plot(item[1], 'g')
-# plt.plot(item[2], 'r')
-# plt.show()

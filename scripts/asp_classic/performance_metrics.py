@@ -1,6 +1,6 @@
 import numpy as np
 
-import audio_util as au
+from ..asp_classic import audio_util as au
 
 
 def _mean_absolute_error(pitch, estimate):
@@ -38,7 +38,7 @@ def calculate_performance_metrics(results):
         for k in i:
             if k == 'audio':
                 continue
-            if not k in totals_clean:
+            if k not in totals_clean:
                 totals_clean[k] = np.array([])
             totals_clean[k] = np.append(totals_clean[k], i[k])
 
@@ -46,7 +46,7 @@ def calculate_performance_metrics(results):
         for k in i:
             if k == 'audio':
                 continue
-            if not k in totals_noisy:
+            if k not in totals_noisy:
                 totals_noisy[k] = np.array([])
             totals_noisy[k] = np.append(totals_noisy[k], i[k])
 
@@ -61,10 +61,10 @@ def calculate_performance_metrics(results):
     metrics['clean_swipe_64_mse'] = _mean_square_error(ref_64, swipe_64)
     metrics['clean_rapt_64_stddev'] = _standard_deviation_hz(ref_64, rapt_64)
     metrics['clean_swipe_64_stddev'] = _standard_deviation_hz(ref_64, swipe_64)
-    metrics['clean_rapt_64_rpa'] = _raw_pitch_accuracy_cent(au.convert_hz_to_cent(ref_64),
-                                                            au.convert_hz_to_cent(rapt_64))
-    metrics['clean_swipe_64_rpa'] = _raw_pitch_accuracy_cent(au.convert_hz_to_cent(ref_64),
-                                                            au.convert_hz_to_cent(swipe_64))
+    metrics['clean_rapt_64_rpa'] = _raw_pitch_accuracy_cent(
+        au.convert_hz_to_cent(ref_64), au.convert_hz_to_cent(rapt_64))
+    metrics['clean_swipe_64_rpa'] = _raw_pitch_accuracy_cent(
+        au.convert_hz_to_cent(ref_64), au.convert_hz_to_cent(swipe_64))
 
     ref_128 = totals_clean['f0_128']
     rapt_128 = totals_clean['f0_rapt_128']
@@ -75,10 +75,10 @@ def calculate_performance_metrics(results):
     metrics['clean_swipe_128_mse'] = _mean_square_error(ref_128, swipe_128)
     metrics['clean_rapt_128_stddev'] = _standard_deviation_hz(ref_128, rapt_128)
     metrics['clean_swipe_128_stddev'] = _standard_deviation_hz(ref_128, swipe_128)
-    metrics['clean_rapt_128_rpa'] = _raw_pitch_accuracy_cent(au.convert_hz_to_cent(ref_128),
-                                                            au.convert_hz_to_cent(rapt_128))
-    metrics['clean_swipe_128_rpa'] = _raw_pitch_accuracy_cent(au.convert_hz_to_cent(ref_128),
-                                                             au.convert_hz_to_cent(swipe_128))
+    metrics['clean_rapt_128_rpa'] = _raw_pitch_accuracy_cent(
+        au.convert_hz_to_cent(ref_128), au.convert_hz_to_cent(rapt_128))
+    metrics['clean_swipe_128_rpa'] = _raw_pitch_accuracy_cent(
+        au.convert_hz_to_cent(ref_128), au.convert_hz_to_cent(swipe_128))
 
     ref_256 = totals_clean['f0_256']
     rapt_256 = totals_clean['f0_rapt_256']
@@ -119,10 +119,10 @@ def calculate_performance_metrics(results):
     metrics['clean_swipe_1024_mse'] = _mean_square_error(ref_1024, swipe_1024)
     metrics['clean_rapt_1024_stddev'] = _standard_deviation_hz(ref_1024, rapt_1024)
     metrics['clean_swipe_1024_stddev'] = _standard_deviation_hz(ref_1024, swipe_1024)
-    metrics['clean_rapt_1024_rpa'] = _raw_pitch_accuracy_cent(au.convert_hz_to_cent(ref_1024),
-                                                             au.convert_hz_to_cent(rapt_1024))
-    metrics['clean_swipe_1024_rpa'] = _raw_pitch_accuracy_cent(au.convert_hz_to_cent(ref_1024),
-                                                              au.convert_hz_to_cent(swipe_1024))
+    metrics['clean_rapt_1024_rpa'] = _raw_pitch_accuracy_cent(
+        au.convert_hz_to_cent(ref_1024), au.convert_hz_to_cent(rapt_1024))
+    metrics['clean_swipe_1024_rpa'] = _raw_pitch_accuracy_cent(
+        au.convert_hz_to_cent(ref_1024), au.convert_hz_to_cent(swipe_1024))
 
     ref_64 = totals_clean['f0_64']
     rapt_64 = totals_clean['f0_rapt_64']

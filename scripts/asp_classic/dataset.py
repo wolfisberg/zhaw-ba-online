@@ -1,9 +1,7 @@
 import tensorflow as tf
-import numpy as np
 import os
 
-import config
-import audio_util
+from ..asp_classic import config, audio_util
 
 
 def _parse_noise_record(serialized_example):

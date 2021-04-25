@@ -4,6 +4,9 @@ import numpy as np
 import pysptk
 import matplotlib.pyplot as plt
 
+from ..util import conversions
+
+
 _SAMPLE_RATE = 16000
 _HOP_SIZE = 512
 _PITCH_TIME = 0.01
@@ -12,14 +15,10 @@ _PITCH_RATE = 1 // _PITCH_TIME
 
 def get_file_path():
     if len(sys.argv) != 3:
-        print(
-            'Please provide a wav file as the first and a reference pitch file as the second argument to this script.')
+        print('Please provide a wav file as the first and a reference pitch file " \
+            + "as the second argument to this script.')
         sys.exit(-1)
     return sys.argv[1], sys.argv[2]
-
-
-def convert_cent_to_hz(c, fref=10.0):
-    return fref * 2 ** (c / 1200.0)
 
 
 def pitch_estimation_ref_rapt(x, fs=_SAMPLE_RATE, hop_size=_HOP_SIZE):
@@ -58,14 +57,18 @@ def main():
     audio_path, pitch_path = get_file_path()
 
     f0 = np.genfromtxt(pitch_path, delimiter=' ')
-    # f0 = convert_cent_to_hz(100 * f0, 10)  # convert cents (100*semitone) to hz
+    if False:
+        f0 = conversions.convert_cent_to_hz(100 * f0, 10)  # convert cents (100*semitone) to hz
+
     f0_time = np.array([i / _PITCH_RATE for i in range(len(f0))])  # create time axis for f0
 
     f0_time = np.arange(0, len(f0)) * _PITCH_TIME
 
-    if len(f0.shape) > 1: f0 = f0.T[0]  # for multi column ground truth files, assume f0 is in col1
+    if len(f0.shape) > 1:
+        f0 = f0.T[0]  # for multi column ground truth files, assume f0 is in col1
     audio, sr_audio = librosa.load(path=audio_path, sr=_SAMPLE_RATE, mono=False)
-    if len(audio.shape) == 2: audio = audio[1]  # for stereo audio, assume channel 1 is voice
+    if len(audio.shape) == 2:
+        audio = audio[1]  # for stereo audio, assume channel 1 is voice
     f0_rapt = pitch_estimation_ref_rapt(audio)
     f0_swipe = pitch_estimation_ref_swipe(audio.astype(np.float64))
     f0_estimated_time_base = np.arange(0, len(audio) // _HOP_SIZE + 1)

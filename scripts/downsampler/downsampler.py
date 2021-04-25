@@ -4,7 +4,6 @@ from pathlib import Path
 import re
 import librosa
 import soundfile
-from scipy.io.wavfile import write as write_wave
 import numpy as np
 
 
@@ -12,9 +11,9 @@ if len(sys.argv) != 2:
     print('''
     Error: Invalid number of args.
     Usage:
-    
+
         python downsampler.py <target dir>
-        
+
     Consult README.md for more info.
     Exiting...
     ''')
@@ -46,9 +45,6 @@ for file in AUDIO_FILES:
         file_path = Path(file)
         new_file_name = os.path.join(str(file_path.parent), f'{file_path.stem}_{PROCESSED_SUFFIX}{file_path.suffix}')
         soundfile.write(file=new_file_name, data=y_16k, samplerate=TARGET_SR, format='WAV', subtype='PCM_16')
-
-        # write file using scipy (result is louder than original)
-        # write_wave(filename=new_file_name, rate=TARGET_SR, data=y_16k)
 
         print(f'[ {new_file_name} ] successfully down-sampled.')
 

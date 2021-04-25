@@ -3,7 +3,6 @@ import numpy as np
 import librosa
 import os
 import math
-import scipy
 import pathlib
 
 
@@ -51,7 +50,8 @@ def create_tfrecords_from_directory(dir, add_ref_data=False):
 
                     if sr != _SAMPLE_RATE:
                         y = librosa.to_mono(y)
-                        y = librosa.resample(y=y, orig_sr=sr, target_sr=_SAMPLE_RATE, res_type='kaiser_best', scale=True)
+                        y = librosa.resample(
+                            y=y, orig_sr=sr, target_sr=_SAMPLE_RATE, res_type='kaiser_best', scale=True)
 
                     if y.dtype != np.dtype(np.int16):
                         y = (y / np.max(np.abs(y)) * np.iinfo(np.int16).max).astype(np.int16)
@@ -64,7 +64,7 @@ def create_tfrecords_from_directory(dir, add_ref_data=False):
                             continue
 
                         ref_data = np.genfromtxt(ref_matches[0], delimiter=' ')
-                        pitch_refdata = np.pad(ref_data.T[0], (6,0), 'constant') # Padding pitch ref data with zeroes
+                        pitch_refdata = np.pad(ref_data.T[0], (6, 0), 'constant')  # Padding pitch ref data with zeroes
 
                         example = tf.train.Example(features=tf.train.Features(feature={
                             'data': _bytes_feature(y.tobytes()),
@@ -85,13 +85,17 @@ def create_tfrecords_from_directory(dir, add_ref_data=False):
 
                     out.write(example.SerializeToString())
 
+
 def _int64_feature(value):
     return tf.train.Feature(int64_list=tf.train.Int64List(value=value))
+
 
 def _bytes_feature(value):
     return tf.train.Feature(bytes_list=tf.train.BytesList(value=[value]))
 
+
 def _float_feature(value):
     return tf.train.Feature(float_list=tf.train.FloatList(value=value))
+
 
 main()
