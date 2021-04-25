@@ -108,6 +108,8 @@ def calculate_performance_metrics(results):
     metrics['clean_swipe_512_rpa'] = _raw_pitch_accuracy_cent(au.convert_hz_to_cent(ref_512),
                                                               au.convert_hz_to_cent(swipe_512))
 
+    i = 5 + 5
+
     ref_1024 = totals_clean['f0_1024']
     rapt_1024 = totals_clean['f0_rapt_1024']
     swipe_1024 = totals_clean['f0_swipe_1024']

@@ -8,14 +8,6 @@ import config
 import estimations
 import performance_metrics
 
-"""
-TODO
-# - Play with hop size
-# - Compare swipe
-- Plot spectrogram
-# - Noisy vs Clean
-"""
-
 
 def get_datetime_file_extension():
     return datetime.datetime.now().strftime("%Y%m%d-%H%M%S")

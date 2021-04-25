@@ -15,6 +15,7 @@ _TEST_DATA_DIR = 'tt'
 _SHARD_BASE_NAME = 'shard_mir1k_'
 _SAMPLE_RATE = 16000
 
+length_differences = []
 
 def main():
     create_tfrecords_from_directory(_BASE_PATH)
@@ -54,7 +55,8 @@ def create_tfrecords_from_directory(dir):
                     ref_data = np.genfromtxt(ref_matches[0])
                     ref_data = _convert_semitone_to_hz(ref_data, 10)  # Convert semitones to Hz
                     ref_data[ref_data <= 10] = 0  # Floor ref data 10 -> 0 Hz for model fitting
-                    # diff = len(y) / 16000 * 1000 - len(ref_data) * 20
+                    ref_data = np.insert(ref_data, 0, 0)
+                    length_differences.append(len(y) / 16000 * 1000 - len(ref_data) * 20)
 
                     example = tf.train.Example(features=tf.train.Features(feature={
                         'data': _bytes_feature(y.tobytes()),
@@ -66,6 +68,8 @@ def create_tfrecords_from_directory(dir):
                     }))
 
                     out.write(example.SerializeToString())
+
+    print('done')
 
 
 def _int64_feature(value):
