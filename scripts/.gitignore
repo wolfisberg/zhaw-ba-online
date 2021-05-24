@@ -1,13 +1,21 @@
-# wav and pitch files
+# Input files
 *.wav
 *.f0
 *.pv
 
+# Images
+*.svg
+*.png
+*.jpg
+*.jpeg
+*.tif
+*.tiff
+
 # Temporary directory for experimentation
 tmp/
+data/
 
 # IDE
-**/.vscode/tags
 .idea/
 
 # Byte-compiled / optimized / DLL files
@@ -139,4 +147,3 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-
