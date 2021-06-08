@@ -24,13 +24,13 @@ def get_pitch_estimates(dataset):
         estimate = {}
         estimate['audio'] = item[0]
 
-        mae = performance_metrics.mean_absolute_error(item)
-        mse = performance_metrics.mean_square_error(item)
-        std_dev = performance_metrics.standard_deviation_hz(item[1], item[2])
+        # mae = performance_metrics.mean_absolute_error(item)
+        # mse = performance_metrics.mean_square_error(item)
+        # std_dev = performance_metrics.standard_deviation_hz(item[1], item[2])
 
-        plt.plot(item[1], 'g')
-        plt.plot(item[2], 'r')
-        plt.show()
+        # plt.plot(item[1], 'g')
+        # plt.plot(item[2], 'r')
+        # plt.show()
 
         for i in range(len(config.FRAME_STEPS)):
             step_size = config.FRAME_STEPS[i]
@@ -52,7 +52,7 @@ def main():
     results['noisy'] = get_pitch_estimates(dataset_test_noisy)
 
     with open(f'results_{get_datetime_file_extension()}.pickle', 'wb') as handle:
-        pickle.dump(results, handle, protocol=pickle.HIGHEST_PROTOCOL)
+        pickle.dump(results, handle)
 
     print('done.')
 

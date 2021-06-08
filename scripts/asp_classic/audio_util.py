@@ -2,7 +2,7 @@ import numpy as np
 import tensorflow as tf
 from scipy import interpolate
 
-from ..asp_classic import config
+from asp_classic import config
 
 
 def interpolate_pitch(pitch, t):

@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "scripts"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+
+[tool.poetry.dependencies]
+python = "~3.7"
+SoundFile = "^0.10.3"
+librosa = "^0.8.0"
+matplotlib = "^3.4.1"
+mir_eval = "^0.6"
+numpy = "~1.19"
+playsound = "^1.2.2"
+pysptk = "^0.1.18"
+scipy = "^1.6.1"
+tensorflow = "^2.4.1"
+rt-pie-lib = "^0.1.12"
+
+[tool.poetry.dev-dependencies]
+black = "^20.8b1"
+pycodestyle = "^2.7.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
